@@ -7,8 +7,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 export function SmoothExperience(){
  useEffect(()=>{if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;gsap.registerPlugin(ScrollTrigger);const lenis=new Lenis({duration:1.05,smoothWheel:true,wheelMultiplier:.85});const update=(time:number)=>lenis.raf(time*1000);const sync=()=>ScrollTrigger.update();lenis.on("scroll",sync);gsap.ticker.add(update);gsap.ticker.lagSmoothing(0);return()=>{lenis.off("scroll",sync);gsap.ticker.remove(update);lenis.destroy()}},[]);
  useLayoutEffect(()=>{gsap.registerPlugin(ScrollTrigger);if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;const ctx=gsap.context(()=>{
-   gsap.from(".hero-copy > *",{y:35,opacity:0,duration:1,stagger:.1,ease:"power3.out",delay:.15});
-   gsap.from(".hero-scene",{y:40,opacity:0,scale:.96,duration:1.25,ease:"power3.out",delay:.35});
+   const heroCopy=document.querySelectorAll(".hero-copy > *");if(heroCopy.length)gsap.from(heroCopy,{y:35,opacity:0,duration:1,stagger:.1,ease:"power3.out",delay:.15});
+   const heroScene=document.querySelector(".hero-scene");if(heroScene)gsap.from(heroScene,{y:40,opacity:0,scale:.96,duration:1.25,ease:"power3.out",delay:.35});
    gsap.utils.toArray<HTMLElement>("section:not(.hero-section) .eyebrow, section:not(.hero-section) .section-title").forEach(el=>gsap.from(el,{y:28,opacity:0,duration:.8,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 88%",once:true}}));
    gsap.utils.toArray<HTMLElement>(".product-visual").forEach((el,index)=>gsap.from(el,{y:index%2?45:70,opacity:0,scale:.98,duration:1,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 88%",once:true}}));
    ScrollTrigger.matchMedia({"(min-width: 1024px) and (prefers-reduced-motion: no-preference)":()=>{
