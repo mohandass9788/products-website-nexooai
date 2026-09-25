@@ -1,0 +1,2 @@
+import { Container } from "./container";
+export function PageHero({eyebrow,title,description,children}:{eyebrow:string;title:string;description:string;children?:React.ReactNode}){return <section className="relative overflow-hidden pb-20 pt-40 sm:pb-28 sm:pt-48"><div className="page-orb"/><Container><p className="eyebrow">{eyebrow}</p><h1 className="mt-6 max-w-6xl text-[clamp(3.6rem,8vw,8rem)] font-medium leading-[.9] tracking-[-.07em]">{title}</h1><p className="mt-8 max-w-2xl text-lg leading-8 text-muted">{description}</p>{children}</Container></section>}

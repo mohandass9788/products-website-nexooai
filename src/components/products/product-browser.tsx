@@ -1,0 +1,10 @@
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { productCategories,products } from "@/data/products";
+import type { ProductCategory } from "@/types/content";
+import { cn } from "@/lib/utils";
+
+type Filter="All"|ProductCategory;
+export function ProductBrowser(){const [filter,setFilter]=useState<Filter>("All");const visible=filter==="All"?products:products.filter(p=>p.category===filter);return <><div className="flex flex-wrap gap-2" aria-label="Filter products">{(["All",...productCategories] as Filter[]).map(item=><button key={item} className={cn("rounded-full border px-4 py-2 text-xs transition-colors",filter===item?"border-accent bg-accent text-black":"border-white/12 text-muted hover:text-white")} onClick={()=>setFilter(item)} aria-pressed={filter===item}>{item}</button>)}</div><div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{visible.map((product,index)=><Link href={`/products/${product.slug}`} key={product.slug} className="group flex min-h-[370px] flex-col rounded-[1.5rem] border border-white/10 bg-[#0e100d] p-6 transition-all hover:-translate-y-1 hover:border-white/25"><div className="flex justify-between"><span className="eyebrow !text-[.58rem]">{product.category}</span><span className="font-mono text-[10px] text-muted">{String(index+1).padStart(2,"0")}</span></div><div className="relative mt-12 h-24 overflow-hidden rounded-2xl border border-white/8 bg-[#090b08]"><span className="absolute left-[15%] top-1/2 h-24 w-24 -translate-y-1/2 rounded-full blur-2xl" style={{background:product.accent,opacity:.18}}/><div className="absolute inset-x-5 bottom-4 flex items-end gap-2">{[32,55,40,72,48,86,63].map((height,i)=><i key={i} className="flex-1 rounded-t-sm opacity-50" style={{height,background:product.accent}}/>)}</div></div><h2 className="mt-7 text-2xl tracking-[-.04em]">{product.name}</h2><p className="mt-3 text-sm leading-6 text-muted">{product.shortDescription}</p><ArrowUpRight className="mt-auto pt-6 text-muted transition-colors group-hover:text-accent" size={34}/></Link>)}</div></>}
