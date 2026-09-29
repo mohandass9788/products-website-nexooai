@@ -423,15 +423,52 @@ export function Work() {
 
 export function FinalCta() {
   return (
-    <Section className="overflow-hidden pt-6">
+    <Section className="overflow-hidden pt-6 pb-24">
       <Container>
-        <div className="cta-panel relative overflow-hidden rounded-[2rem] border border-white/10 px-6 py-20 text-center sm:px-12 sm:py-28">
-          <p className="eyebrow">Ready when you are</p>
-          <h2 className="mx-auto mt-5 max-w-5xl text-[clamp(3rem,7vw,7rem)] leading-[.9] tracking-[-.065em]">
-            Let’s build what your business needs next.
+        <div className="relative overflow-hidden rounded-[2.5rem] border border-white/12 bg-gradient-to-b from-[#0a0f24] via-[#070b18] to-[#040711] px-6 py-20 text-center sm:px-14 sm:py-28 shadow-2xl">
+          {/* Ambient Cyber Neon Orbs */}
+          <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 h-[450px] w-[700px] rounded-full bg-gradient-to-r from-[#00f0ff]/20 via-[#a855f7]/20 to-[#ff7b00]/20 blur-[120px]" />
+
+          {/* Logo Emblem Badge */}
+          <div className="relative mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-1.5 backdrop-blur-xl">
+            <div className="relative h-4 w-4 overflow-hidden rounded-full">
+              <Image src="/images/nexooai-logo.png" alt="NexooAI" fill className="object-contain" />
+            </div>
+            <span className="font-mono text-xs uppercase tracking-wider text-[#00f0ff]">
+              Direct Architect Consultation
+            </span>
+          </div>
+
+          <h2 className="mx-auto max-w-4xl text-4xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-white leading-[1.02]">
+            Ready to Engineer Your Next{" "}
+            <span className="gradient-text-nexoo">Digital Breakthrough?</span>
           </h2>
-          <div className="mt-9 flex justify-center">
-            <ButtonLink href="/contact">Start a conversation</ButtonLink>
+
+          <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
+            Connect directly with a NexooAI solutions architect. We will audit your current operational bottlenecks, calculate implementation timelines, and present a live proof-of-concept within 48 hours.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <ButtonLink href="/contact" className="button-primary gap-2">
+              <span>Book Architecture Consultation</span>
+              <span className="text-black">↗</span>
+            </ButtonLink>
+
+            <a
+              href="https://wa.me/919876543210?text=Hello%20NexooAI%2C%20I%20want%20to%20schedule%20a%20product%20architecture%20demo."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="button border border-white/15 bg-white/5 text-white hover:bg-white/10 flex items-center gap-2"
+            >
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Direct WhatsApp Chat</span>
+            </a>
+          </div>
+
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-8 border-t border-white/8 pt-8 font-mono text-xs text-muted">
+            <span>✓ Zero Obligation Review</span>
+            <span>✓ Production-Ready Blueprints</span>
+            <span>✓ Fixed-Price Milestones</span>
           </div>
         </div>
       </Container>

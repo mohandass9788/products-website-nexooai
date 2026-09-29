@@ -1,8 +1,20 @@
 import { Hero } from "@/components/sections/home/hero";
-import { EndToEnd, FeaturedProducts, FinalCta, Industries, ProductRail, ProductUniverse, Proof, Services, Work } from "@/components/sections/home/home-sections";
+import { CorePillars } from "@/components/sections/home/core-pillars";
+import { ProductUniverse, Industries, Work, FinalCta } from "@/components/sections/home/home-sections";
+import { ArchitectureMoat } from "@/components/sections/home/architecture-moat";
 
 export default function Home() {
   return (
-    <main><Hero/><ProductUniverse/><FeaturedProducts/><ProductRail/><Industries/><EndToEnd/><Services/><Proof/><Work/><FinalCta/></main>
+    <main>
+      <Hero />
+      <CorePillars />
+      <div id="showcase">
+        <ProductUniverse />
+      </div>
+      <ArchitectureMoat />
+      <Industries />
+      <Work />
+      <FinalCta />
+    </main>
   );
 }
