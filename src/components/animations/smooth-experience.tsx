@@ -80,14 +80,15 @@ export function SmoothExperience() {
 
       ScrollTrigger.matchMedia({
         "(min-width: 1024px) and (prefers-reduced-motion: no-preference)": () => {
+          // 02 / Product Universe: Controlled pinned scrub with smooth step dispatch
           const universe = document.querySelector<HTMLElement>(".universe-section");
           if (universe) {
             ScrollTrigger.create({
               trigger: universe,
               start: "top top",
-              end: "+=2600",
+              end: "+=2000",
               pin: true,
-              scrub: 0.5,
+              scrub: 0.8,
               anticipatePin: 1,
               onUpdate: (self) => {
                 window.dispatchEvent(
@@ -99,19 +100,36 @@ export function SmoothExperience() {
             });
           }
 
-          const rail = document.querySelector<HTMLElement>(".product-rail");
-          if (rail) {
-            const distance = () => Math.max(0, rail.scrollWidth - rail.clientWidth);
-            gsap.to(rail, {
-              x: () => -distance(),
+          // 04 / Capabilities Rail: Edge-to-edge pinned horizontal scroll with exact bounding and live progress
+          const railSection = document.querySelector<HTMLElement>(".capabilities-rail-section");
+          const railTrack = document.querySelector<HTMLElement>(".capabilities-track");
+          const progressBar = document.querySelector<HTMLElement>(".rail-progress-bar");
+          const countLabel = document.querySelector<HTMLElement>(".rail-count");
+
+          if (railSection && railTrack) {
+            const getDistance = () =>
+              Math.max(0, railTrack.scrollWidth - window.innerWidth + 80);
+
+            gsap.to(railTrack, {
+              x: () => -getDistance(),
               ease: "none",
               scrollTrigger: {
-                trigger: rail.parentElement,
-                start: "top 18%",
-                end: () => `+=${distance()}`,
+                trigger: railSection,
+                start: "top top",
+                end: () => `+=${getDistance()}`,
                 pin: true,
-                scrub: 1,
+                scrub: 0.8,
+                anticipatePin: 1,
                 invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                  if (progressBar) {
+                    progressBar.style.width = `${Math.max(8, self.progress * 100)}%`;
+                  }
+                  if (countLabel) {
+                    const currentCard = Math.min(13, Math.floor(self.progress * 13) + 1);
+                    countLabel.textContent = `${String(currentCard).padStart(2, "0")} / 13`;
+                  }
+                },
               },
             });
           }

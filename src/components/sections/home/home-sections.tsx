@@ -83,73 +83,94 @@ export function FeaturedProducts() {
 
 export function ProductRail() {
   return (
-    <Section className="border-y border-white/8 bg-[#090a08]">
-      <Container>
-        <SectionHeading
-          eyebrow="04 / Capabilities"
-          title="A system for every side of the business."
-        />
-        <div className="product-rail -mx-5 mt-14 flex snap-x gap-4 overflow-x-auto px-5 pb-6 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
-          {products.map((product, index) => (
-            <Link
-              href={`/products/${product.slug}`}
-              key={product.slug}
-              className="group min-h-[380px] w-[82vw] max-w-[390px] shrink-0 snap-start rounded-[1.6rem] border border-white/10 bg-[#10120f] p-6 transition-all hover:-translate-y-1 hover:border-white/25 flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="eyebrow !text-[.6rem]">{product.category}</span>
-                  <span className="font-mono text-[10px] text-muted">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
+    <section className="capabilities-rail-section relative overflow-hidden border-y border-white/8 bg-[#090a08] py-20 lg:py-28">
+      {/* Header Container */}
+      <Container className="mb-10 sm:mb-12">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <SectionHeading
+            eyebrow="04 / Capabilities"
+            title="A system for every side of the business."
+            body="Explore our end-to-end software ecosystem engineered for retail, jewellery, hospitality, commerce, and enterprise operations."
+          />
 
-                {/* Real Product Image Preview in Card */}
-                <div className="relative mt-6 h-36 w-full overflow-hidden rounded-xl border border-white/10 bg-[#090b08]">
-                  <Image
-                    src={product.heroImage || "/images/products/estimate-app.webp"}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="340px"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#10120f] via-transparent to-transparent opacity-60" />
-                  <div
-                    className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[9px] backdrop-blur-md"
-                    style={{
-                      backgroundColor: "rgba(0,0,0,0.65)",
-                      color: product.accent || "#d8ff5f",
-                      border: `1px solid ${product.accent || "#d8ff5f"}33`,
-                    }}
-                  >
-                    <span
-                      className="h-1.5 w-1.5 rounded-full"
-                      style={{ backgroundColor: product.accent || "#d8ff5f" }}
-                    />
-                    {product.shortName}
-                  </div>
-                </div>
-
-                <h3 className="mt-5 text-2xl tracking-[-.04em] text-white group-hover:text-accent transition-colors">
-                  {product.name}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-muted line-clamp-2">
-                  {product.shortDescription}
-                </p>
+          {/* Interactive Progress Indicator */}
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-muted">
+              <span>Progress</span>
+              <div className="h-1.5 w-28 overflow-hidden rounded-full bg-white/15">
+                <div className="rail-progress-bar h-full w-[8%] rounded-full bg-accent transition-all duration-150" />
               </div>
-
-              <div className="mt-6 flex items-center justify-between border-t border-white/8 pt-4">
-                <span className="font-mono text-xs text-muted">Learn more</span>
-                <ArrowRight
-                  className="text-muted transition-all group-hover:translate-x-1 group-hover:text-accent"
-                  size={18}
-                />
-              </div>
-            </Link>
-          ))}
+              <span className="rail-count text-white font-semibold">01 / 13</span>
+            </div>
+          </div>
         </div>
       </Container>
-    </Section>
+
+      {/* Horizontal Scrolling Track - Edge-to-edge without container clipping */}
+      <div className="capabilities-track flex gap-6 px-6 sm:px-10 lg:px-16 w-max will-change-transform max-lg:overflow-x-auto max-lg:snap-x max-lg:w-full max-lg:pb-6">
+        {products.map((product, index) => (
+          <Link
+            href={`/products/${product.slug}`}
+            key={product.slug}
+            className="group relative flex h-[430px] w-[320px] sm:w-[380px] shrink-0 max-lg:snap-start flex-col justify-between rounded-[1.8rem] border border-white/10 bg-[#10120f] p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/40 hover:shadow-[0_12px_40px_-15px_rgba(216,255,95,0.2)]"
+          >
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent">
+                  {product.category}
+                </span>
+                <span className="font-mono text-xs text-muted">
+                  {String(index + 1).padStart(2, "0")} / 13
+                </span>
+              </div>
+
+              {/* Real Product Image Preview in Card */}
+              <div className="relative mt-5 h-44 w-full overflow-hidden rounded-xl border border-white/10 bg-[#090b08]">
+                <Image
+                  src={product.heroImage || "/images/products/estimate-app.webp"}
+                  alt={product.name}
+                  fill
+                  className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  sizes="380px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#10120f] via-transparent to-transparent opacity-60" />
+                <div
+                  className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] backdrop-blur-md"
+                  style={{
+                    backgroundColor: "rgba(0,0,0,0.75)",
+                    color: product.accent || "#d8ff5f",
+                    border: `1px solid ${product.accent || "#d8ff5f"}44`,
+                  }}
+                >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: product.accent || "#d8ff5f" }}
+                  />
+                  {product.shortName}
+                </div>
+              </div>
+
+              <h3 className="mt-5 text-2xl font-semibold tracking-[-.03em] text-white group-hover:text-accent transition-colors">
+                {product.name}
+              </h3>
+              <p className="mt-2 text-xs leading-5 text-muted line-clamp-2">
+                {product.shortDescription}
+              </p>
+            </div>
+
+            <div className="mt-4 flex items-center justify-between border-t border-white/8 pt-3.5">
+              <span className="font-mono text-xs text-muted group-hover:text-white transition-colors">
+                Explore product
+              </span>
+              <ArrowRight
+                className="text-muted transition-all group-hover:translate-x-1 group-hover:text-accent"
+                size={16}
+              />
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
 
