@@ -14,6 +14,7 @@ export function Logo() {
           src="/images/nexooai-logo.png"
           alt="NexooAI"
           fill
+          sizes="36px"
           className="object-contain p-0.5"
           priority
         />

@@ -10,21 +10,24 @@ interface ProductVisualProps {
   imageSrc?: string;
   tagline?: string;
   badge?: string;
+  priority?: boolean;
 }
 
 export function ProductVisual({
   label,
-  accent = "#d8ff5f",
+  accent = "#00f0ff",
   variant = "dashboard",
   className,
   imageSrc,
   tagline,
   badge,
+  priority,
 }: ProductVisualProps) {
+  const isPriority = priority ?? (variant === "dashboard");
   return (
     <div
       className={cn(
-        "product-visual group relative overflow-hidden rounded-[1.8rem] border border-white/12 bg-gradient-to-b from-[#161a13] to-[#0c0e0b] p-3 shadow-2xl transition-all duration-500 hover:border-white/25",
+        "product-visual group relative overflow-hidden rounded-[1.8rem] border border-white/12 bg-gradient-to-b from-[#0e1628] to-[#060a15] p-3 shadow-2xl transition-all duration-500 hover:border-white/25",
         variant === "phone" && "mx-auto max-w-[320px] rounded-[2.8rem] p-2.5",
         className
       )}
@@ -40,12 +43,12 @@ export function ProductVisual({
 
       <div
         className={cn(
-          "relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#090b08]",
+          "relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#040711]",
           variant === "phone" && "min-h-[500px] rounded-[2.2rem]"
         )}
       >
         {/* Header Bar */}
-        <div className="flex h-11 shrink-0 items-center justify-between border-b border-white/8 bg-[#0e110c]/80 px-4 backdrop-blur-md">
+        <div className="flex h-11 shrink-0 items-center justify-between border-b border-white/8 bg-[#080d1e]/80 px-4 backdrop-blur-md">
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
             <span className="h-2.5 w-2.5 rounded-full bg-amber-500/70" />
@@ -88,10 +91,11 @@ export function ProductVisual({
               fill
               className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
-              priority={variant === "dashboard"}
+              priority={isPriority}
+              loading={isPriority ? "eager" : undefined}
             />
             {/* Dark gradient overlay for SaaS integration */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#090b08] via-transparent to-transparent opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#040711] via-transparent to-transparent opacity-60" />
 
             {/* Floating Glassmorphic Badge */}
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-xl border border-white/12 bg-black/60 p-3 backdrop-blur-md">

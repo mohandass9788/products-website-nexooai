@@ -432,7 +432,7 @@ export function FinalCta() {
           {/* Logo Emblem Badge */}
           <div className="relative mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-1.5 backdrop-blur-xl">
             <div className="relative h-4 w-4 overflow-hidden rounded-full">
-              <Image src="/images/nexooai-logo.png" alt="NexooAI" fill className="object-contain" />
+              <Image src="/images/nexooai-logo.png" alt="NexooAI" fill sizes="16px" className="object-contain" />
             </div>
             <span className="font-mono text-xs uppercase tracking-wider text-[#00f0ff]">
               Direct Architect Consultation
