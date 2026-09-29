@@ -80,26 +80,6 @@ export function SmoothExperience() {
 
       ScrollTrigger.matchMedia({
         "(min-width: 1024px) and (prefers-reduced-motion: no-preference)": () => {
-          // 02 / Product Universe: Controlled pinned scrub with smooth step dispatch
-          const universe = document.querySelector<HTMLElement>(".universe-section");
-          if (universe) {
-            ScrollTrigger.create({
-              trigger: universe,
-              start: "top top",
-              end: "+=2200",
-              pin: true,
-              scrub: 0.5,
-              anticipatePin: 1,
-              onUpdate: (self) => {
-                window.dispatchEvent(
-                  new CustomEvent("universe-scroll-step", {
-                    detail: { progress: self.progress },
-                  })
-                );
-              },
-            });
-          }
-
           // 04 / Capabilities Rail: Edge-to-edge pinned horizontal scroll with exact bounding and live progress
           const railSection = document.querySelector<HTMLElement>(".capabilities-rail-section");
           const railTrack = document.querySelector<HTMLElement>(".capabilities-track");

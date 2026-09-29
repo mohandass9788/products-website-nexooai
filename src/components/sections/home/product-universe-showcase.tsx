@@ -2,7 +2,17 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { ArrowRight, Check, ChevronLeft, ChevronRight, Cpu, Layers, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Cpu,
+  Layers,
+  Pause,
+  Play,
+  Sparkles,
+} from "lucide-react";
 import { products } from "@/data/products";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -10,41 +20,52 @@ import { ButtonLink } from "@/components/ui/button";
 
 export function ProductUniverseShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const isManualRef = useRef(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+
+  const sectionRef = useRef<HTMLElement>(null);
   const manualTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const activeProduct = products[activeIndex] || products[0];
 
   const totalProducts = products.length; // 13
   const stepAngle = 360 / totalProducts; // ~27.692 deg
+  const activeProduct = products[activeIndex] || products[0];
 
-  // Listen exclusively to GSAP ScrollTrigger's pinned scrub event with zero listener conflicts
+  // Detect when section is visible in viewport so auto-rotation only runs when user sees it
   useEffect(() => {
-    const handleStep = (e: Event) => {
-      if (isManualRef.current) return;
-      const customEvent = e as CustomEvent<{ progress: number }>;
-      const progress = Math.max(0, Math.min(0.999, customEvent.detail?.progress ?? 0));
-      const newIndex = Math.min(
-        totalProducts - 1,
-        Math.floor(progress * totalProducts)
-      );
-      setActiveIndex(newIndex);
-    };
+    const el = sectionRef.current;
+    if (!el) return;
 
-    window.addEventListener("universe-scroll-step", handleStep);
-    return () => {
-      window.removeEventListener("universe-scroll-step", handleStep);
-      if (manualTimeoutRef.current) clearTimeout(manualTimeoutRef.current);
-    };
-  }, [totalProducts]);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Smooth Auto-Play Loop: Gently rotates through all 13 products every 3.5s
+  useEffect(() => {
+    if (!isAutoPlaying || isHovered || !isInView) return;
+
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % totalProducts);
+    }, 3500);
+
+    return () => clearInterval(timer);
+  }, [isAutoPlaying, isHovered, isInView, totalProducts]);
 
   const handleSelectProduct = (index: number) => {
     setActiveIndex(index);
-    isManualRef.current = true;
+    // Pause auto-rotation for 6s when user clicks so they can read comfortably
+    setIsHovered(true);
     if (manualTimeoutRef.current) clearTimeout(manualTimeoutRef.current);
-    // Allow user to explore manually; re-enable scroll sync after 3.5s of idle
     manualTimeoutRef.current = setTimeout(() => {
-      isManualRef.current = false;
-    }, 3500);
+      setIsHovered(false);
+    }, 6000);
   };
 
   const handleNext = () => {
@@ -56,14 +77,15 @@ export function ProductUniverseShowcase() {
   };
 
   // Wheel rotation calculation:
-  // We place each node at base angle: 180 + i * stepAngle (180deg is 9 o'clock, pointing to left card).
+  // Node base angle: 180 + i * stepAngle (180deg is 9 o'clock, pointing to left card).
   // Rotating the wheel by -(activeIndex * stepAngle) keeps the active node locked at 180deg (9 o'clock)!
   const wheelRotation = -(activeIndex * stepAngle);
 
   return (
     <section
+      ref={sectionRef}
       id="product-universe"
-      className="universe-section relative border-y border-white/8 bg-[#040711] py-16 lg:py-20 lg:min-h-screen lg:flex lg:flex-col lg:justify-center overflow-hidden"
+      className="universe-section relative border-y border-white/8 bg-[#040711] py-20 lg:py-28 overflow-hidden"
     >
       {/* Dynamic ambient background glow that shifts color with active product */}
       <div
@@ -79,33 +101,53 @@ export function ProductUniverseShowcase() {
           <SectionHeading
             eyebrow="02 / Product Universe"
             title="One Core. Many Possibilities."
-            body="Scroll down to rotate through our 13 synchronized enterprise systems powered by NeXooAI's unified core engine."
+            body="Explore 13 synchronized enterprise systems auto-cycling through NeXooAI's unified core engine."
           />
 
-          {/* Quick Counter & Nav Buttons */}
+          {/* Quick Counter, Auto-Play Status & Nav Buttons */}
           <div className="flex items-center gap-4 self-start md:self-end">
-            <div className="flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 font-mono text-xs text-muted backdrop-blur-md">
-              <span className="h-2 w-2 rounded-full bg-[#00f0ff] animate-ping" />
-              <span>Scroll to Rotate</span>
-            </div>
+            {/* Auto-Play Toggle Chip */}
+            <button
+              onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+              className="flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 font-mono text-xs text-muted backdrop-blur-md hover:border-[#00f0ff]/50 hover:text-white transition-all cursor-pointer"
+              title={isAutoPlaying ? "Click to Pause Auto-Rotation" : "Click to Resume Auto-Rotation"}
+            >
+              {isAutoPlaying && !isHovered ? (
+                <>
+                  <span className="h-2 w-2 rounded-full bg-[#00f0ff] animate-ping" />
+                  <span className="text-white font-medium">Auto-Orbit</span>
+                  <Pause size={12} className="text-muted" />
+                </>
+              ) : (
+                <>
+                  <span className="h-2 w-2 rounded-full bg-white/40" />
+                  <span>Paused</span>
+                  <Play size={12} className="text-[#00f0ff]" />
+                </>
+              )}
+            </button>
+
+            {/* Step Counter */}
             <span className="font-mono text-sm tracking-widest text-muted">
               <strong className="text-white font-medium text-lg">
                 {String(activeIndex + 1).padStart(2, "0")}
               </strong>{" "}
               / {String(totalProducts).padStart(2, "0")}
             </span>
+
+            {/* Prev / Next Buttons */}
             <div className="flex gap-2">
               <button
                 onClick={handlePrev}
                 aria-label="Previous product"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/5 text-white transition-all hover:border-[#00f0ff] hover:bg-[#00f0ff]/10 hover:text-[#00f0ff] active:scale-95"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/5 text-white transition-all hover:border-[#00f0ff] hover:bg-[#00f0ff]/10 hover:text-[#00f0ff] active:scale-95 cursor-pointer"
               >
                 <ChevronLeft size={18} />
               </button>
               <button
                 onClick={handleNext}
                 aria-label="Next product"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/5 text-white transition-all hover:border-[#00f0ff] hover:bg-[#00f0ff]/10 hover:text-[#00f0ff] active:scale-95"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/5 text-white transition-all hover:border-[#00f0ff] hover:bg-[#00f0ff]/10 hover:text-[#00f0ff] active:scale-95 cursor-pointer"
               >
                 <ChevronRight size={18} />
               </button>
@@ -121,7 +163,7 @@ export function ProductUniverseShowcase() {
               <button
                 key={p.slug}
                 onClick={() => handleSelectProduct(index)}
-                className={`group flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-all duration-300 ${
+                className={`group flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-all duration-300 cursor-pointer ${
                   isCurrent
                     ? "border-[#00f0ff] bg-[#00f0ff]/15 text-white shadow-[0_0_18px_rgba(0,240,255,0.3)]"
                     : "border-white/10 bg-[#070c18] text-muted hover:border-white/25 hover:text-white"
@@ -141,8 +183,11 @@ export function ProductUniverseShowcase() {
         </div>
 
         {/* Main Stage: Left Large Product Showcase + Right Rotating Orbital Dial */}
-        <div className="mt-8 grid items-center gap-8 lg:grid-cols-[1.3fr_1fr] xl:grid-cols-[1.35fr_1fr] lg:gap-12">
-          
+        <div
+          className="mt-8 grid items-center gap-8 lg:grid-cols-[1.3fr_1fr] xl:grid-cols-[1.35fr_1fr] lg:gap-12"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           {/* Left: Large Product Showcase Card (Persistent, Crossfading UI) */}
           <div
             className="group relative overflow-hidden rounded-[2rem] border border-white/12 bg-gradient-to-b from-[#0a1024] to-[#040813] p-6 shadow-2xl transition-all duration-500 sm:p-8 hover:border-white/25"
@@ -287,10 +332,8 @@ export function ProductUniverseShowcase() {
 
           {/* Right: Rotating Orbital Gyroscope / Radar Dial */}
           <div className="relative mx-auto flex flex-col items-center justify-center">
-            
             {/* The Outer Dial Frame */}
             <div className="relative aspect-square w-full max-w-[450px] lg:max-w-[480px] xl:max-w-[520px] p-2">
-              
               {/* Outer Radar Rings & Markings */}
               <div className="absolute inset-[1%] rounded-full border border-white/10" />
               <div className="absolute inset-[13%] rounded-full border border-dashed border-white/15 animate-[spin_120s_linear_infinite]" />
@@ -400,7 +443,7 @@ export function ProductUniverseShowcase() {
                       key={p.slug}
                       onClick={() => handleSelectProduct(index)}
                       aria-label={`Select ${p.name}`}
-                      className={`universe-node absolute transition-all duration-300 ${
+                      className={`universe-node absolute transition-all duration-300 cursor-pointer ${
                         isCurrent
                           ? "z-30 scale-110 rounded-full border-2 font-bold px-3.5 py-1.5 text-xs shadow-2xl"
                           : "z-20 rounded-full border border-white/15 bg-[#070c1a]/95 text-white/70 hover:border-[#00f0ff]/60 hover:text-white px-2 py-1 text-[9px] font-mono hover:scale-110"
@@ -450,7 +493,6 @@ export function ProductUniverseShowcase() {
               <span className="text-[#00f0ff] font-semibold">180° Focus</span>
             </div>
           </div>
-
         </div>
       </Container>
     </section>
