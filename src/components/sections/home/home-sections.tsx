@@ -342,6 +342,7 @@ export function Work() {
               src="/images/case-studies/jewellery-transformation.webp"
               alt="Jewellery Digitization"
               fill
+              sizes="(max-width: 1024px) 100vw, 60vw"
               className="object-cover opacity-35 transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#090b08] via-[#090b08]/70 to-transparent" />
@@ -381,6 +382,7 @@ export function Work() {
               src="/images/case-studies/retail-scale.webp"
               alt="Retail POS Scale"
               fill
+              sizes="(max-width: 1024px) 100vw, 40vw"
               className="object-cover opacity-30 transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#090b08] via-[#090b08]/70 to-transparent" />
