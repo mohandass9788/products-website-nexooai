@@ -1,4 +1,4 @@
-# YOUR COMPANY — Product Showcase
+# NexooAI — Product Universe & Enterprise Software Showcase
 
 A premium, data-driven software product showcase built with Next.js App Router, TypeScript, Tailwind CSS, GSAP, Lenis, Motion, and Lucide React.
 
