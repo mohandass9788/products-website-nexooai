@@ -86,9 +86,9 @@ export function SmoothExperience() {
             ScrollTrigger.create({
               trigger: universe,
               start: "top top",
-              end: "+=2000",
+              end: "+=2200",
               pin: true,
-              scrub: 0.8,
+              scrub: 0.5,
               anticipatePin: 1,
               onUpdate: (self) => {
                 window.dispatchEvent(
