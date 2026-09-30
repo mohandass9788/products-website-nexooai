@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Check, MoveRight, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, Check, MoveRight, Sparkles, TrendingUp, Smartphone } from "lucide-react";
 import { products } from "@/data/products";
 import { industries } from "@/data/industries";
 import { services } from "@/data/services";
@@ -11,8 +11,47 @@ import { ProductVisual } from "@/components/ui/product-visual";
 import { ButtonLink } from "@/components/ui/button";
 import { ProductUniverseShowcase } from "./product-universe-showcase";
 
+import { ThreePhoneShowcase } from "./three-phone-showcase";
+
 export function ProductUniverse() {
-  return <ProductUniverseShowcase />;
+  return (
+    <>
+      <ProductUniverseShowcase />
+      <div id="mobile-app-suite" className="relative border-b border-white/8 bg-[#040711] py-16 lg:py-24 overflow-hidden">
+        <Container>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+              <div className="flex items-center gap-2 mb-2 font-mono text-xs uppercase tracking-[.24em] text-[#00f0ff]">
+                <Smartphone size={14} />
+                <span>03 / Mobile App Suite • Native iOS & Android</span>
+              </div>
+              <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+                Three Synchronized Native App Experiences.
+              </h3>
+              <p className="mt-3 text-sm sm:text-base text-muted max-w-2xl leading-relaxed">
+                Step into the hands of your customers. Explore the end-to-end mobile flow side-by-side — frictionless onboarding, real-time portfolio telemetry, and automated chit investment plans.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 font-mono text-xs text-muted backdrop-blur-md">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-white font-medium">Production Store Build</span>
+              </div>
+              <ButtonLink
+                href="/products/ecommerce-mobile"
+                variant="secondary"
+                className="font-mono text-xs"
+              >
+                <span>Mobile Architecture ↗</span>
+              </ButtonLink>
+            </div>
+          </div>
+
+          <ThreePhoneShowcase />
+        </Container>
+      </div>
+    </>
+  );
 }
 
 export function FeaturedProducts() {
