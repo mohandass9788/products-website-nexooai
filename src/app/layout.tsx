@@ -13,10 +13,32 @@ export const metadata: Metadata = {
   metadataBase: new URL(brand.siteUrl),
   title: { default: `${brand.name} — ${brand.tagline}`, template: `%s — ${brand.name}` },
   description: brand.heroDescription,
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/icon.png",
+    apple: "/apple-icon.png",
+  },
   openGraph: { title: brand.name, description: brand.heroDescription, type: "website" },
   twitter: { card: "summary_large_image", title: brand.name, description: brand.heroDescription },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  return <html lang="en" className={`${sans.variable} ${mono.variable}`}><body><SmoothExperience/><a className="skip-link" href="#main-content">Skip to content</a><Header/><div id="main-content">{children}</div><Footer/></body></html>;
+  return (
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+      <body className="flex min-h-screen flex-col overflow-x-hidden w-full">
+        <SmoothExperience />
+        <a className="skip-link" href="#main-content">
+          Skip to content
+        </a>
+        <Header />
+        <div id="main-content" className="flex-1 w-full overflow-x-hidden">
+          {children}
+        </div>
+        <Footer />
+      </body>
+    </html>
+  );
 }

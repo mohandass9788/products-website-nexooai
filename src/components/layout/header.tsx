@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -14,6 +15,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -28,6 +30,14 @@ export function Header() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  // Determine if a navigation link is active based on current path
+  const isItemActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
     <header
@@ -47,9 +57,11 @@ export function Header() {
         <div className="flex items-center justify-between">
           <Logo />
 
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
-            {navigation.map((item) =>
-              item.label === "Products" ? (
+          <nav className="hidden items-center gap-1.5 lg:flex" aria-label="Primary navigation">
+            {navigation.map((item) => {
+              const active = item.label === "Products" ? pathname.startsWith("/products") : isItemActive(item.href);
+
+              return item.label === "Products" ? (
                 <div
                   key={item.href}
                   className="relative"
@@ -57,13 +69,19 @@ export function Header() {
                   onMouseLeave={() => setMega(false)}
                 >
                   <button
-                    className="flex items-center gap-1 rounded-full px-3.5 py-2 text-xs font-medium text-muted transition-colors hover:text-white"
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200",
+                      active
+                        ? "border border-[#00f0ff]/30 bg-[#00f0ff]/10 text-[#00f0ff] shadow-[0_0_15px_rgba(0,240,255,0.15)]"
+                        : "border border-transparent text-muted hover:text-white hover:border-white/10 hover:bg-white/5"
+                    )}
                     aria-expanded={mega}
                     aria-haspopup="true"
                     onClick={() => setMega(!mega)}
                   >
-                    {item.label}
-                    <ChevronDown size={13} />
+                    {active && <span className="h-1.5 w-1.5 rounded-full bg-[#00f0ff] animate-pulse" />}
+                    <span>{item.label}</span>
+                    <ChevronDown size={13} className={cn("transition-transform duration-200", mega && "rotate-180")} />
                   </button>
                   <AnimatePresence>
                     {mega && (
@@ -79,22 +97,32 @@ export function Header() {
                             <div key={group.category}>
                               <p className="eyebrow mb-3 !text-[.6rem] !text-[#00f0ff]">{group.category}</p>
                               <ul className="space-y-2.5">
-                                {group.products.map((product) => (
-                                  <li key={product.slug}>
-                                    <Link
-                                      onClick={() => setMega(false)}
-                                      className="group block"
-                                      href={`/products/${product.slug}`}
-                                    >
-                                      <span className="block text-sm font-medium text-white transition-colors group-hover:text-[#00f0ff]">
-                                        {product.name}
-                                      </span>
-                                      <span className="mt-0.5 line-clamp-1 block text-[11px] text-muted">
-                                        {product.shortDescription}
-                                      </span>
-                                    </Link>
-                                  </li>
-                                ))}
+                                {group.products.map((product) => {
+                                  const isCurrentProduct = pathname === `/products/${product.slug}`;
+                                  return (
+                                    <li key={product.slug}>
+                                      <Link
+                                        onClick={() => setMega(false)}
+                                        className="group block"
+                                        href={`/products/${product.slug}`}
+                                      >
+                                        <span
+                                          className={cn(
+                                            "block text-sm font-medium transition-colors",
+                                            isCurrentProduct
+                                              ? "text-[#00f0ff]"
+                                              : "text-white group-hover:text-[#00f0ff]"
+                                          )}
+                                        >
+                                          {product.name}
+                                        </span>
+                                        <span className="mt-0.5 line-clamp-1 block text-[11px] text-muted">
+                                          {product.shortDescription}
+                                        </span>
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
                               </ul>
                             </div>
                           ))}
@@ -105,14 +133,20 @@ export function Header() {
                 </div>
               ) : (
                 <Link
-                  className="rounded-full px-3.5 py-2 text-xs font-medium text-muted transition-colors hover:text-white"
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200",
+                    active
+                      ? "border border-[#00f0ff]/30 bg-[#00f0ff]/10 text-[#00f0ff] shadow-[0_0_15px_rgba(0,240,255,0.15)]"
+                      : "border border-transparent text-muted hover:text-white hover:border-white/10 hover:bg-white/5"
+                  )}
                   href={item.href}
                   key={item.href}
                 >
-                  {item.label}
+                  {active && <span className="h-1.5 w-1.5 rounded-full bg-[#00f0ff] animate-pulse" />}
+                  <span>{item.label}</span>
                 </Link>
-              )
-            )}
+              );
+            })}
           </nav>
 
           <div className="hidden lg:block">
@@ -152,20 +186,33 @@ export function Header() {
               className="flex flex-col"
               aria-label="Mobile navigation"
             >
-              {navigation.map((item) => (
-                <motion.div
-                  variants={{ closed: { opacity: 0, y: 12 }, open: { opacity: 1, y: 0 } }}
-                  key={item.href}
-                >
-                  <Link
-                    onClick={() => setOpen(false)}
-                    className="block border-b border-white/10 py-4 text-2xl font-medium tracking-tight text-white hover:text-[#00f0ff]"
-                    href={item.href}
+              {navigation.map((item) => {
+                const active = item.label === "Products" ? pathname.startsWith("/products") : isItemActive(item.href);
+
+                return (
+                  <motion.div
+                    variants={{ closed: { opacity: 0, y: 12 }, open: { opacity: 1, y: 0 } }}
+                    key={item.href}
                   >
-                    {item.label}
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "flex items-center justify-between border-b border-white/10 py-4 text-2xl font-medium tracking-tight transition-colors",
+                        active ? "text-[#00f0ff]" : "text-white hover:text-[#00f0ff]"
+                      )}
+                      href={item.href}
+                    >
+                      <span>{item.label}</span>
+                      {active && (
+                        <span className="flex items-center gap-1.5 rounded-full border border-[#00f0ff]/30 bg-[#00f0ff]/10 px-2.5 py-0.5 font-mono text-[10px] uppercase text-[#00f0ff]">
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#00f0ff] animate-pulse" />
+                          Active
+                        </span>
+                      )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </motion.nav>
             <ButtonLink
               href="/contact"

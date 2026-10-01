@@ -113,15 +113,15 @@ export function ContactForm() {
         </button>
 
         <a
-          href={`https://wa.me/919876543210?text=${encodeURIComponent(
-            "Hello NexooAI, I am interested in exploring your software products."
+          href={`https://wa.me/919788033234?text=${encodeURIComponent(
+            "Hello Mohandass, I am interested in exploring NexooAI software products."
           )}`}
           target="_blank"
           rel="noopener noreferrer"
           className="button border border-white/15 bg-white/5 text-white hover:bg-white/10 flex items-center justify-center gap-2 text-sm"
         >
           <MessageSquare size={16} className="text-emerald-400" />
-          Chat on WhatsApp
+          Chat on WhatsApp (97880 33234)
         </a>
       </div>
 

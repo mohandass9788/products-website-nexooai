@@ -21,6 +21,6 @@ export type Product = {
   accent: string;
 };
 
-export type Solution = { slug:string; name:string; label:string; description:string; challenge:string; productSlugs:string[]; stages:string[]; accent:string };
-export type Service = { slug:string; name:string; index:string; description:string; deliverables:string[]; outcome:string };
-export type Industry = { slug:string; name:string; description:string; challenges:string[]; capabilities:string[]; productSlugs:string[]; accent:string };
+export type Solution = { slug:string; name:string; label:string; description:string; challenge:string; productSlugs:string[]; stages:string[]; accent:string; image?:string };
+export type Service = { slug:string; name:string; index:string; description:string; deliverables:string[]; outcome:string; accent?:string; image?:string };
+export type Industry = { slug:string; name:string; description:string; challenges:string[]; capabilities:string[]; productSlugs:string[]; accent:string; image?:string };

@@ -292,30 +292,99 @@ export function Services() {
   return (
     <Section>
       <Container>
-        <SectionHeading
-          eyebrow="07 / Services"
-          title="Capability, all the way through."
-        />
-        <div className="mt-14 grid gap-px overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/10 md:grid-cols-2">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <SectionHeading
+            eyebrow="07 / Services"
+            title="Capability, all the way through."
+            body="From the first architectural whiteboard to enterprise cloud deployment and 24/7 reliability."
+          />
+          <ButtonLink href="/services" variant="secondary" className="font-mono text-xs">
+            View All Services ↗
+          </ButtonLink>
+        </div>
+        <div className="mt-12 grid gap-4 sm:gap-6 md:grid-cols-2">
           {services.map((service) => (
             <Link
               href={`/services/${service.slug}`}
               key={service.slug}
-              className="group bg-[#0b0d0a] p-6 transition-colors hover:bg-[#11150e] sm:p-9"
+              className="group relative flex min-h-[300px] sm:min-h-[340px] flex-col justify-between overflow-hidden rounded-[1.8rem] border border-white/10 bg-[#0d100c] p-6 sm:p-8 transition-all duration-500 hover:-translate-y-2 hover:border-white/25 hover:shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]"
+              style={
+                {
+                  "--srv-accent": service.accent || "#70d7ff",
+                } as React.CSSProperties
+              }
             >
-              <span className="font-mono text-[10px] text-accent">
-                {service.index}
-              </span>
-              <h3 className="mt-8 text-2xl tracking-[-.04em] sm:text-3xl">
-                {service.name}
-              </h3>
-              <p className="mt-3 max-w-lg text-sm leading-6 text-muted">
-                {service.description}
-              </p>
-              <MoveRight
-                className="mt-7 transition-transform group-hover:translate-x-2"
-                size={18}
+              {/* Background Image Layer with Scrim */}
+              {service.image && (
+                <div className="absolute inset-0 z-0 overflow-hidden">
+                  <Image
+                    src={service.image}
+                    alt={service.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover opacity-20 transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-30"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c09] via-[#0a0c09]/80 to-[#0a0c09]/30" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0a0c09]/90 via-[#0a0c09]/40 to-transparent" />
+                </div>
+              )}
+
+              {/* Ambient Neon Accent Glow in Corner */}
+              <span
+                className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full blur-3xl transition-opacity duration-500 group-hover:opacity-75"
+                style={{ background: service.accent || "#70d7ff", opacity: 0.12 }}
               />
+
+              {/* Top Header Row with Index & NexooAI Logo Emblem */}
+              <div className="relative z-10 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="relative h-4 w-4 overflow-hidden rounded-full opacity-80 group-hover:opacity-100 transition-opacity">
+                    <Image
+                      src="/images/nexooai-logo.png"
+                      alt="NexooAI"
+                      fill
+                      sizes="16px"
+                      className="object-contain"
+                    />
+                  </div>
+                  <span
+                    className="rounded-full px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider backdrop-blur-md transition-colors"
+                    style={{
+                      backgroundColor: `${service.accent || "#70d7ff"}18`,
+                      color: service.accent || "#70d7ff",
+                      border: `1px solid ${service.accent || "#70d7ff"}33`,
+                    }}
+                  >
+                    Service {service.index}
+                  </span>
+                </div>
+
+                <span className="font-mono text-xs text-muted/80">
+                  {service.deliverables?.[0] || "Architecture"}
+                </span>
+              </div>
+
+              {/* Body Content */}
+              <div className="relative z-10 mt-14 sm:mt-20">
+                <h3 className="text-2xl sm:text-3xl font-semibold tracking-[-.04em] text-white transition-colors group-hover:text-[var(--srv-accent)]">
+                  {service.name}
+                </h3>
+                <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted line-clamp-2">
+                  {service.description}
+                </p>
+
+                <div className="mt-6 flex items-center justify-between border-t border-white/8 pt-4">
+                  <span className="font-mono text-xs text-muted transition-colors group-hover:text-white">
+                    Explore Service Architecture
+                  </span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-all duration-300 group-hover:border-[var(--srv-accent)] group-hover:bg-[var(--srv-accent)]/15 group-hover:translate-x-1">
+                    <MoveRight
+                      className="text-muted transition-colors group-hover:text-[var(--srv-accent)]"
+                      size={16}
+                    />
+                  </div>
+                </div>
+              </div>
             </Link>
           ))}
         </div>
@@ -494,7 +563,7 @@ export function FinalCta() {
             </ButtonLink>
 
             <a
-              href="https://wa.me/919876543210?text=Hello%20NexooAI%2C%20I%20want%20to%20schedule%20a%20product%20architecture%20demo."
+              href="https://wa.me/919788033234?text=Hello%20NexooAI%2C%20I%20want%20to%20schedule%20a%20product%20architecture%20demo."
               target="_blank"
               rel="noopener noreferrer"
               className="button border border-white/15 bg-white/5 text-white hover:bg-white/10 flex items-center gap-2"
